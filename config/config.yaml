@@ -1,0 +1,7 @@
+server:
+  address: ":8000"
+
+database:
+  default:
+    link: "mysql:root:password@tcp(localhost:3306)/LeaveWord?charset=utf8mb4&parseTime=true&loc=Local"
+    debug: true
