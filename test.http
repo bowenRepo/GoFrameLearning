@@ -2,7 +2,7 @@
 GET http://localhost:8000/api/v1/messages?pageNum=1&pageSize=10
 Accept: application/json
 Authorization: abcdef123456
-
+ 
 ### 发布留言 不带token
 POST http://localhost:8000/api/v1/messages
 Content-Type: application/json
