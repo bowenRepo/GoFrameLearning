@@ -44,7 +44,7 @@ func DeleteMessageByID(id int) bool {
             messages = append(messages[:i], messages[i+1:]...)
             return true
         }
-    }
+    }	
     return false
 }
 
