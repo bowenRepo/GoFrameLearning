@@ -59,3 +59,13 @@ func UpdateMessageByID(id int, name, content string) *Message {
     }
     return nil
 }
+
+// GetMessageByID 根据 id 返回对应的 *Message，找不到返回 nil
+func GetMessageByID(id int) *Message {
+    for _, m := range messages {
+        if m.ID == id {
+            return m
+        }
+    }
+    return nil
+}
