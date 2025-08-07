@@ -9,12 +9,12 @@ Authorization: abcdef123456
 }
 
 ### 数据库查询
-GET http://localhost:8000/api/v1/messages?pageNum=1&pageSize=10
+GET http://localhost:8000/api/v1/messages?pageNum=2&pageSize=5
 Accept: application/json
 Authorization: abcdef123456
 
 ### 查询留言列表（分页查询，第1页，每页10条） 带token
-GET http://localhost:8000/api/v1/messages?pageNum=1&pageSize=10
+GET http://localhost:8000/api/v1/messages?pageNum=3&pageSize=5
 Accept: application/json
 Authorization: abcdef123456
  
