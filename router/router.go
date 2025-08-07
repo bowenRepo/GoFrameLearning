@@ -7,6 +7,7 @@
 // )
 
 // func Register(s *ghttp.Server) {
+
 // 	s.Group("/api/v1", func(group *ghttp.RouterGroup) {
 // 		group.GET("/messages", handler.GetMessageList)
 // 		group.POST("/messages", handler.AddMessage)
@@ -16,6 +17,7 @@
 
 // router/router.go
 package router
+
 
 import (
 	"LeaveWordDemo/handler"
@@ -33,10 +35,10 @@ func Register(s *ghttp.Server) {
 		group.POST("/messages", handler.AddMessage)
 		group.GET("/test_panic", handler.TestPanic)
 		group.DELETE("/messages/{id}", handler.DeleteMessage)
-        group.PUT("/messages/{id}", handler.UpdateMessage)
-        
-        // 单条详情接口
-        group.GET("/messages/{id}", handler.GetMessage)
+		group.PUT("/messages/{id}", handler.UpdateMessage)
+
+		// 单条详情接口
+		group.GET("/messages/{id}", handler.GetMessage)
 
 	})
 }

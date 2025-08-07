@@ -3,5 +3,5 @@ server:
 
 database:
   default:
-    link: "mysql:root:password@tcp(localhost:3306)/LeaveWord?charset=utf8mb4&parseTime=true&loc=Local"
+    link: "mysql:root:password@tcp(localhost:3306)/leaveword?charset=utf8mb4&parseTime=true&loc=Local"
     debug: true

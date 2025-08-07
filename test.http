@@ -1,16 +1,23 @@
+### 数据库测试:POST
+POST http://localhost:8000/api/v1/messages
+Content-Type: application/json
+Authorization: abcdef123456
+
+{
+  "name": "Bowen",
+  "content": "Hello MySQL!"
+}
+
+### 数据库查询
+GET http://localhost:8000/api/v1/messages?pageNum=1&pageSize=10
+Accept: application/json
+Authorization: abcdef123456
+
 ### 查询留言列表（分页查询，第1页，每页10条） 带token
 GET http://localhost:8000/api/v1/messages?pageNum=1&pageSize=10
 Accept: application/json
 Authorization: abcdef123456
  
-### 发布留言 不带token
-POST http://localhost:8000/api/v1/messages
-Content-Type: application/json
-
-{
-  "name": "Bowen",
-  "content": "Hello, this is my first message!"
-}
 
 ### 发布留言带token
 POST http://localhost:8000/api/v1/messages
@@ -26,10 +33,6 @@ Authorization: abcdef123456
 GET http://localhost:8000/api/v1/test_panic
 Accept: application/json
 Authorization: abcdef123456
-
-### panic 测试  不带token
-GET http://localhost:8000/api/v1/test_panic
-Accept: application/json
 
 ### 删除 ID=3 的留言（期望 code=0）
 DELETE http://localhost:8000/api/v1/messages/3

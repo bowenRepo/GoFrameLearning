@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "github.com/gogf/gf/contrib/drivers/mysql/v2"
 	"LeaveWordDemo/middleware"
 	"LeaveWordDemo/router"
 	"github.com/gogf/gf/v2/frame/g"

@@ -1,71 +1,79 @@
 package model
 
+import (
+	"context"
+
+	"github.com/gogf/gf/v2/frame/g"
+)
+
+// 表名常量，后续写查询更直观
+const Table = "message"
+
+// Message 映射 message 表
 type Message struct {
-	ID      int    `json:"id"`
-	Name    string `json:"name"`
-	Content string `json:"content"`
+	Id        int    `json:"id"        orm:"id,primary"`
+	Name      string `json:"name"      orm:"name"`
+	Content   string `json:"content"   orm:"content"`
+	CreatedAt string `json:"createdAt" orm:"created_at"`
 }
 
-// 先用内存模拟留言列表
-var messages = []*Message{}
-var nextID = 1
-
-// 添加留言
-func AddMessage(name, content string) *Message {
-	msg := &Message{
-		ID:      nextID,
-		Name:    name,
-		Content: content,
+// 添加留言（单条）
+func AddMessage(ctx context.Context, name, content string) (*Message, error) {
+	msg := &Message{Name: name, Content: content}
+	// 直接 Insert 结构体，gdb 自动读取 orm 标签
+	r, err := g.DB().Model(Table).Insert(ctx, msg)
+	if err != nil {
+		return nil, err
 	}
-	messages = append(messages, msg)
-	nextID++
-	return msg
+	id, _ := r.LastInsertId()
+	return GetMessageByID(ctx, int(id))
 }
 
-// 查询留言（分页）: 指针 + 大小
-func ListMessages(offset, limit int) ([]*Message, int) {
-	total := len(messages)
-	if offset > total {
-		return []*Message{}, total
+// 查询留言（分页）
+func ListMessages(ctx context.Context, offset, limit int) ([]*Message, int, error) {
+	var list []*Message
+	// 查总数
+	total, err := g.DB().Model(Table).Count(ctx)
+	if err != nil {
+		return nil, 0, err
 	}
-	end := offset + limit
-	if end > total {
-		end = total
+	// 查数据
+	err = g.DB().
+		Model(Table).
+		Order("id DESC").
+		Limit(offset, limit).
+		Scan(ctx, &list)
+	if err != nil {
+		return nil, 0, err
 	}
-	return messages[offset:end], total
+	return list, total, nil
 }
 
-
-// 删除指定 ID 的留言，成功返回 true，否则 false
-func DeleteMessageByID(id int) bool {
-    for i, m := range messages {
-        if m.ID == id {
-            // 删掉这个元素
-            messages = append(messages[:i], messages[i+1:]...)
-            return true
-        }
-    }	
-    return false
+// 查询单条（id）
+func GetMessageByID(ctx context.Context, id int) (*Message, error) {
+	var msg *Message
+	err := g.DB().Model(Table).Where("id", id).Scan(ctx, &msg)
+	return msg, err
 }
 
-// 更新指定 ID 的留言内容，成功返回更新后的 *Message，否则 nil
-func UpdateMessageByID(id int, name, content string) *Message {
-    for _, m := range messages {
-        if m.ID == id {
-            m.Name    = name
-            m.Content = content
-            return m
-        }
-    }
-    return nil
+// delete 单条(id)
+func DeleteMessageByID(ctx context.Context, id int) (bool, error) {
+	r, err := g.DB().Model(Table).Where("id", id).Delete(ctx)
+	if err != nil {
+		return false, err
+	}
+	affected, _ := r.RowsAffected()
+	return affected > 0, nil
 }
 
-// GetMessageByID 根据 id 返回对应的 *Message，找不到返回 nil
-func GetMessageByID(id int) *Message {
-    for _, m := range messages {
-        if m.ID == id {
-            return m
-        }
-    }
-    return nil
+// update 单条(id)
+func UpdateMessageByID(ctx context.Context, id int, name, content string) (*Message, error) {
+	_, err := g.DB().Model(Table).Data(g.Map{
+		"name":    name,
+		"content": content,
+	}).Where("id", id).Update(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return GetMessageByID(ctx, id)
 }

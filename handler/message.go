@@ -13,7 +13,7 @@ func GetMessageList(r *ghttp.Request) {
 
 	g.Log().Infof(r.Context(), "pageNum=%d, pageSize=%d", pageNum, pageSize)
 
-	list, total, err := service.GetMessageList(pageNum, pageSize)
+	list, total, err := service.GetMessageList(r.Context(), pageNum, pageSize)
 	if err != nil {
 		r.Response.WriteJson(g.Map{"code": 1, "msg": err.Error()})
 		return
@@ -37,7 +37,7 @@ func AddMessage(r *ghttp.Request) {
 		r.Response.WriteJson(g.Map{"code": 1, "msg": "参数解析失败"})
 		return
 	}
-	msg, err := service.AddMessage(req.Name, req.Content)
+	msg, err := service.AddMessage(r.Context(), req.Name, req.Content)
 	if err != nil {
 		r.Response.WriteJson(g.Map{"code": 2, "msg": err.Error()})
 		return
@@ -55,7 +55,7 @@ func TestPanic(r *ghttp.Request) {
 
 func DeleteMessage(r *ghttp.Request) {
 	id := r.Get("id").Int() // 路径参数
-	if err := service.DeleteMessage(id); err != nil {
+	if err := service.DeleteMessage(r.Context(), id); err != nil {
 		code := 1
 		msg := err.Error()
 		// 自定义不同错误码
@@ -78,7 +78,7 @@ func UpdateMessage(r *ghttp.Request) {
         r.Response.WriteJson(g.Map{"code": 1, "msg": "参数解析失败"})
         return
     }
-    msg, err := service.UpdateMessage(id, req.Name, req.Content)
+    msg, err := service.UpdateMessage(r.Context(), id, req.Name, req.Content)
     if err != nil {
         code := 2
         if err == service.ErrInvalidParam {
@@ -96,7 +96,7 @@ func UpdateMessage(r *ghttp.Request) {
 
 func GetMessage(r *ghttp.Request) {
     id := r.Get("id").Int()  // 路径参数名要和 router 保持一致
-    msg, err := service.GetMessage(id)
+    msg, err := service.GetMessage(r.Context(), id)
     if err != nil {
         code := 1
         if err == service.ErrInvalidParam {
